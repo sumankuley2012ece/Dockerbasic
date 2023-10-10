@@ -1,0 +1,125 @@
+### NGINX CONTAINER USING COPY ###
+FROM nginx
+RUN apt update -y
+COPY /healet/ /usr/share/nginx/html/
+WORKDIR /usr/share/nginx/html
+lab1:-
+
+FROM ubuntu
+RUN apt-get update
+WORKDIR /tmp
+RUN echo "Welcome to dockerclass" > /tmp/index.htmlab
+COPY . /tmp
+MAINTAINER sky...........................done
+
+*******************************************************
+LAB2:-
+FROM ubuntu
+MAINTAINER sky
+RUN apt-get update
+RUN apt-get install -y python3 python3-pip
+WORKDIR app
+copy . /app
+EXPOSE 5000
+ENTRYPOINT echo "Hello world !"
+ENV NAME world............................done
+
+*************************************
+LAB3
+FROM ubuntu
+ENV APP nginx
+RUN apt-get update && apt-get install -y nginx
+WORKDIR /var/www/html
+ADD index.html ./
+EXPOSE 80
+CMD ["nginx","-g","daemon off;"]
+**************************************************
+ssh sysadmin@20.10.153.111
+
+from flask import Flask
+from redis import Redis, RedisError
+import os
+import socket
+
+# Connect to Redis
+redis = Redis(host="redis", db=0, socket_connect_timeout=2, socket_timeout=2)
+
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    try:
+        visits = redis.incr("counter")
+    except RedisError:
+        visits = "<i>cannot connect to Redis, counter disabled</i>"
+
+    html = "<h3>Hello {name}!</h3>" \
+           "<b>Hostname:</b> {hostname}<br/>" \
+           "<b>Visits:</b> {visits}"
+    return html.format(name=os.getenv("NAME", "world"), hostname=socket.gethostname(), visits=visits)
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=80)    
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Flask
+
+Redis
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# Use an official Python runtime as a parent image
+FROM python:latest
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . /app
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
+
+# Make port 80 available to the world outside this container
+EXPOSE 80
+
+# Define environment variable
+ENV NAME World
+
+# Run app.py when the container launches
+CMD ["python", "app.py"]
+
+
+********************************************
+##to install tomcat####
+FROM centos:7
+RUN yum install -y java-11
+RUN mkdir /opt/tomcat
+WORKDIR /opt/tomcat
+ADD https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.75/bin/apache-tomcat-9.0.75.tar.gz .
+RUN tar -xvzf apache-tomcat-9.0.75.tar.gz
+RUN mv apache-tomcat-9.0.75/* /opt/tomcat
+EXPOSE 8080
+CMD ["/opt/tomcat/bin/catalina.sh","run"]
+
+************************************************
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+WORKDIR /app
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY ["dotnetproject1/dotnetproject1.csproj", "dotnetproject1/"]
+RUN dotnet restore "dotnetproject1/dotnetproject1.csproj"
+COPY . .
+WORKDIR "/src/dotnetproject1"
+RUN dotnet build "dotnetproject1.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "dotnetproject1.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "dotnetproject1.dll"]
