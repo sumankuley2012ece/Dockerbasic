@@ -154,4 +154,6 @@ CMD ["nginx","-g","daemon off;"]
 ***************************
 
 docker run --name ownclouddb -d -e MYSQL_ROOT_PASSWORD=secretpass -p 3030:3306 -v /mnt/manvol:/var/lib/mysql mysql:5.7 -bind mount
-docker run --name newdbdata -d -e MYSQL_ROOT_PASSWORD=secretpass -p 3031:3306 -v mydbdata:/var/lib/mysql mysql:5.7  -volume   
+docker run --name newdbdata -d -e MYSQL_ROOT_PASSWORD=secretpass -p 3031:3306 -v mydbdata:/var/lib/mysql mysql:5.7  -volume  
+*************************
+git rm -r -To remove the files in github branch  
