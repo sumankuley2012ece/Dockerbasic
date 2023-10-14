@@ -1,0 +1,49 @@
+FROM nginx
+RUN apt get update -y
+WORKDIR /usr/share/nginx/html
+COPY . /usr/share/nginx/html
+LABEL "Author"=""sky"
+LABEL "ProjectName"="Nginxproject"
+**********************************
+FROM ubuntu:latest
+RUN apt upgrade -y 
+RUN apt install nginx
+WORKDIR /var/www/html
+COPY  /var/www/html
+MAINTAINER sky
+EXPOSE 80
+CMD ["nginx","-g","daemon off;"]
+
+************
+FROM ubuntu:latest
+RUN apt update -y
+RUN apt install nginx -y
+WORKDIR /var/www/html
+COPY /finexo-html/ /var/www/html  [copy files to container path]
+MAINTAINER sky
+EXPOSE 80
+CMD ["nginx","-g","daemon off;"]
+
+***************************
+
+docker run --name ownclouddb -d -e MYSQL_ROOT_PASSWORD=secretpass -p 3030:3306 -v /mnt/manvol:/var/lib/mysql mysql:5.7 -bind mount
+docker run --name newdbdata -d -e MYSQL_ROOT_PASSWORD=secretpass -p 3031:3306 -v mydbdata:/var/lib/mysql mysql:5.7  -volume  
+***************************
+FROM ubuntu:latest
+RUN apt update -y
+RUN apt install nginx -y
+WORKDIR /var/www/html
+COPY /carvilla/ /var/www/html
+MAINTAINER sky
+EXPOSE 80
+CMD ["nginx","-g","daemon off;"]
+*************
+docker volume create mydbdata -to create volume
+docker volume ls  -To display docker volume
+
+docker run -d -p 80:80 -v mycontdata:/var/www/html newapps1
+***********************
+
+git rm -r -To remove the files in github branch                              
+
+
